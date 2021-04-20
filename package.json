@@ -1,0 +1,26 @@
+{
+    "name": "dictionary-api",
+    "version": "1.0.0",
+    "description": "Dictionary REST API",
+    "repository": "git@gitlab.com:gregooroo/dictionary-api.git",
+    "author": "Mateusz Gregorczyk <gregooroo@gmail.com>",
+    "license": "AGPL-3.0-only",
+    "scripts": {
+        "format": "prettier --write \"src/**/*.{ts,json}\"",
+        "lint": "eslint \"src/**/*.ts\" --quiet",
+        "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
+        "prepare": "husky install"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^4.22.0",
+        "@typescript-eslint/parser": "^4.22.0",
+        "eslint": "^7.24.0",
+        "eslint-config-prettier": "^8.2.0",
+        "eslint-plugin-import": "^2.22.1",
+        "husky": "^6.0.0",
+        "lint-staged": "^10.5.4",
+        "prettier": "^2.2.1",
+        "ts-node-dev": "^1.1.6",
+        "typescript": "^4.2.4"
+    }
+}
