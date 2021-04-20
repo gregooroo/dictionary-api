@@ -1,7 +1,12 @@
 import express from "express";
 import { AddressInfo } from "net";
+import wordsRouter from "./resources/words/words.router";
 
 const app = express();
+
+app.use(express.json());
+
+app.use("/api/words", wordsRouter);
 
 export function start(): void {
     if (!process.env.PORT) {
