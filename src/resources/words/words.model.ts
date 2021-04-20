@@ -66,4 +66,14 @@ const wordSchema = new Schema({
     },
 });
 
+const arrayValidator = {
+    validator(arr: string[]) {
+        return Array.isArray(arr) && arr.length !== 0;
+    },
+    message: "{PATH} must be an array with at least one value",
+};
+
+wordSchema.path("translations").validate(arrayValidator);
+wordSchema.path("examples").validate(arrayValidator);
+
 export default model<Word>("Word", wordSchema);
