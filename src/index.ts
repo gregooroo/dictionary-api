@@ -1,1 +1,3 @@
-console.log("Hello World!");
+import "dotenv/config";
+import { start } from "./server";
+start();
