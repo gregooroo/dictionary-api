@@ -20,6 +20,7 @@ export async function start(): Promise<void> {
     const { port, name } = await connect(process.env.MONGODB_URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        useCreateIndex: true,
     });
     console.log(`Database started: PORT: ${port}, DB_NAME: ${name}`);
 

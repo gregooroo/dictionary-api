@@ -66,6 +66,8 @@ const wordSchema = new Schema({
     },
 });
 
+wordSchema.index({ word: 1, translations: 1 }, { unique: true });
+
 const arrayValidator = {
     validator(arr: string[]) {
         return Array.isArray(arr) && arr.length !== 0;
