@@ -77,3 +77,9 @@ typings/
 
 #DynamoDB Local files 
 .dynamodb/ 
+
+#VSCode settings
+.vscode/
+
+#Personal notes etc.
+notes.txt

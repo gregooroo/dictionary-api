@@ -1,4 +1,6 @@
-import { Schema, model, Document, Types } from "mongoose";
+import { Schema, model, Document, Types, NativeError } from "mongoose";
+import type { MongoError } from "mongodb";
+// import { RestError } from "../../utils/errorHandlers";
 
 interface Word extends Document {
     word: string;
@@ -67,6 +69,25 @@ const wordSchema = new Schema({
 });
 
 wordSchema.index({ word: 1, translations: 1 }, { unique: true });
+
+interface DuplicateError extends MongoError {
+    keyValue?: Record<string, unknown>;
+}
+
+wordSchema.post(
+    "save",
+    function duplicateFound(
+        err: DuplicateError,
+        _doc: Word,
+        next: (err?: NativeError) => void,
+    ) {
+        if (err.code !== 11000 || err.name !== "MongoError") {
+            return next();
+        }
+
+        // return next(new RestError(409, "Duplicate Found"));
+    },
+);
 
 const arrayValidator = {
     validator(arr: string[]) {
