@@ -9,4 +9,6 @@ const router = Router();
 // /api/words
 router.post("/", middleware.validateBody, wordsController.createWord);
 
+router.get("/", wordsController.getWords);
+
 export default router;
