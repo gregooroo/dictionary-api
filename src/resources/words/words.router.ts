@@ -1,4 +1,5 @@
 import { Router } from "express";
+import * as middleware from "./words.middleware";
 import * as wordsController from "./words.controller";
 
 // All routers are loaded in src/server.ts file
@@ -6,6 +7,6 @@ import * as wordsController from "./words.controller";
 const router = Router();
 
 // /api/words
-router.post("/", wordsController.createWord);
+router.post("/", middleware.validateBody, wordsController.createWord);
 
 export default router;
