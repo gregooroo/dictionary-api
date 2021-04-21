@@ -17,6 +17,7 @@
     },
     "plugins": ["@typescript-eslint", "import"],
     "rules": {
-        "curly": "error"
+        "curly": "error",
+        "@typescript-eslint/no-unused-vars": "off"
     }
 }
