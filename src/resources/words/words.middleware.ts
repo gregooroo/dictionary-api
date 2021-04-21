@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { body, validationResult } from "express-validator";
+import { RestError } from "../../utils/errorHandlers";
 
 export const validateBody = [
     body("word")
@@ -50,16 +51,20 @@ export const validateBody = [
         ])
         .withMessage("Invalid value"),
 
-    function validate(req: Request, res: Response, next: NextFunction): void {
+    function validate(req: Request, _res: Response, next: NextFunction): void {
         const errors = validationResult(req);
 
         if (errors.isEmpty()) {
             return next();
         }
 
-        res.status(400).json({
-            message: "Validation Failed",
-            details: errors.array(),
-        });
+        return next(
+            new RestError(
+                400,
+                "Validation Failed",
+                "Please check details to see what happened",
+                errors.array(),
+            ),
+        );
     },
 ];
