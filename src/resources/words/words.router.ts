@@ -17,10 +17,16 @@ router
     )
     .get(catchAsyncAwaitErrors(wordsController.getWords));
 
-router.get(
-    "/:id",
-    middlewares.validateMongoDbId,
-    catchAsyncAwaitErrors(wordsController.getWord),
-);
+router
+    .route("/:id")
+    .get(
+        middlewares.validateMongoDbId,
+        catchAsyncAwaitErrors(wordsController.getWord),
+    )
+    .patch(
+        middlewares.validateMongoDbId,
+        middlewares.validateBody,
+        catchAsyncAwaitErrors(wordsController.updateWord),
+    );
 
 export default router;

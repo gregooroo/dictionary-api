@@ -25,6 +25,7 @@ export async function start(): Promise<void> {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,
+        useFindAndModify: false,
     });
     console.log(`Database started: PORT: ${port}, DB_NAME: ${name}`);
 

@@ -40,3 +40,27 @@ export async function getWord(
         result,
     });
 }
+
+export async function updateWord(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+): Promise<void> {
+    const { id } = req.params;
+
+    const result = await Model.findByIdAndUpdate(id, req.body, {
+        runValidators: true,
+        new: true,
+    }).lean();
+
+    if (!result) {
+        return next(
+            new RestError(404, "Not Found", "ID not found in database", { id }),
+        );
+    }
+
+    res.status(200).json({
+        success: true,
+        result,
+    });
+}
