@@ -1,45 +1,31 @@
-import type { Request, Response, NextFunction } from "express";
-import { body, param, validationResult } from "express-validator";
 import { Types } from "mongoose";
-import { RestError } from "../../utils/errorHandlers";
+import {
+    param,
+    expressValidatorResult,
+    stringFieldValidator,
+    arrayFieldValidator,
+} from "../../utils/express-validator";
 
 export const validateBody = [
-    body("word")
-        .trim()
-        .not()
-        .isEmpty()
-        .withMessage("Word is required")
-        .toLowerCase(),
+    stringFieldValidator("word", "Word is required"),
 
-    body("definition")
-        .trim()
-        .not()
-        .isEmpty()
-        .withMessage("Definition is required")
-        .toLowerCase(),
+    stringFieldValidator("definition", "Definition is required"),
 
-    body("translations")
-        .isArray({ min: 1 })
-        .withMessage("Translations must be an array with at least one value"),
+    arrayFieldValidator(
+        "translations",
+        "Translations must be an array with at least one value",
+    ),
 
-    body("translations.*")
-        .trim()
-        .not()
-        .isEmpty()
-        .withMessage("Empty field")
-        .toLowerCase(),
+    stringFieldValidator("translations.*", "Empty field"),
 
-    body("examples")
-        .isArray({ min: 1 })
-        .withMessage("Examples must be an array with at least one value"),
+    arrayFieldValidator(
+        "examples",
+        "Examples must be an array with at least one value",
+    ),
 
-    body("examples.*").trim().not().isEmpty().withMessage("Empty field"),
+    stringFieldValidator("examples.*", "Empty field", { lowercase: false }),
 
-    body("partOfSpeech")
-        .trim()
-        .not()
-        .isEmpty()
-        .withMessage("Part of speech is required")
+    stringFieldValidator("partOfSpeech", "Part of speech is required")
         .isIn([
             "noun",
             "pronoun",
@@ -52,22 +38,7 @@ export const validateBody = [
         ])
         .withMessage("Invalid value"),
 
-    function validate(req: Request, _res: Response, next: NextFunction): void {
-        const errors = validationResult(req);
-
-        if (errors.isEmpty()) {
-            return next();
-        }
-
-        return next(
-            new RestError(
-                400,
-                "Validation Failed",
-                "Please check details to see what happened",
-                errors.array(),
-            ),
-        );
-    },
+    expressValidatorResult,
 ];
 
 export const validateMongoDbId = [
@@ -76,20 +47,5 @@ export const validateMongoDbId = [
             return Types.ObjectId.isValid(value);
         })
         .withMessage("Invalid ID"),
-    function validate(req: Request, _res: Response, next: NextFunction): void {
-        const errors = validationResult(req);
-
-        if (errors.isEmpty()) {
-            return next();
-        }
-
-        return next(
-            new RestError(
-                400,
-                "Validation Failed",
-                "Please check details to see what happened",
-                errors.array(),
-            ),
-        );
-    },
+    expressValidatorResult,
 ];
