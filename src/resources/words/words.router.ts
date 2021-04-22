@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as middleware from "./words.middleware";
+import * as middlewares from "./words.middleware";
 import * as wordsController from "./words.controller";
 
 // All routers are loaded in src/server.ts file
@@ -7,8 +7,10 @@ import * as wordsController from "./words.controller";
 const router = Router();
 
 // /api/words
-router.post("/", middleware.validateBody, wordsController.createWord);
+router.post("/", middlewares.validateBody, wordsController.createWord);
 
 router.get("/", wordsController.getWords);
+
+router.get("/:id", middlewares.validateMongoDbId, wordsController.getWord);
 
 export default router;

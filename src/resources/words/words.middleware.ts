@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
-import { body, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
+import { Types } from "mongoose";
 import { RestError } from "../../utils/errorHandlers";
 
 export const validateBody = [
@@ -51,6 +52,30 @@ export const validateBody = [
         ])
         .withMessage("Invalid value"),
 
+    function validate(req: Request, _res: Response, next: NextFunction): void {
+        const errors = validationResult(req);
+
+        if (errors.isEmpty()) {
+            return next();
+        }
+
+        return next(
+            new RestError(
+                400,
+                "Validation Failed",
+                "Please check details to see what happened",
+                errors.array(),
+            ),
+        );
+    },
+];
+
+export const validateMongoDbId = [
+    param("id")
+        .custom((value) => {
+            return Types.ObjectId.isValid(value);
+        })
+        .withMessage("Invalid ID"),
     function validate(req: Request, _res: Response, next: NextFunction): void {
         const errors = validationResult(req);
 
