@@ -1,6 +1,6 @@
 import { Schema, model, Document, Types, NativeError } from "mongoose";
 import type { MongoError } from "mongodb";
-// import { RestError } from "../../utils/errorHandlers";
+import { RestError } from "../../utils/errorHandlers";
 
 interface Word extends Document {
     word: string;
@@ -85,7 +85,14 @@ wordSchema.post(
             return next();
         }
 
-        // return next(new RestError(409, "Duplicate Found"));
+        return next(
+            new RestError(
+                409,
+                "Duplicata Found",
+                `Word "${err.keyValue?.word}" with translation "${err.keyValue?.translations}" already exists`,
+                { ...err.keyValue },
+            ),
+        );
     },
 );
 
