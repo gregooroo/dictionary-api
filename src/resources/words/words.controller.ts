@@ -2,30 +2,22 @@ import type { NextFunction, Request, Response } from "express";
 import { RestError } from "../../utils/errorHandlers";
 import Model from "./words.model";
 
-export async function createWord(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-): Promise<void> {
-    try {
-        const result = await Model.create(req.body);
-        res.status(200).json({ result });
-    } catch (err) {
-        return next(err);
-    }
+export async function createWord(req: Request, res: Response): Promise<void> {
+    const result = await Model.create(req.body);
+
+    res.status(200).json({
+        success: true,
+        result,
+    });
 }
 
-export async function getWords(
-    _req: Request,
-    res: Response,
-    next: NextFunction,
-): Promise<void> {
-    try {
-        const result = await Model.find({}).lean();
-        res.status(200).json({ result });
-    } catch (err) {
-        return next(err);
-    }
+export async function getWords(_req: Request, res: Response): Promise<void> {
+    const result = await Model.find({}).lean();
+
+    res.status(200).json({
+        success: true,
+        result,
+    });
 }
 
 export async function getWord(
