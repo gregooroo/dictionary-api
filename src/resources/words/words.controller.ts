@@ -64,3 +64,24 @@ export async function updateWord(
         result,
     });
 }
+
+export async function deleteWord(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+): Promise<void> {
+    const { id } = req.params;
+
+    const result = await Model.findByIdAndDelete(id).lean();
+
+    if (!result) {
+        return next(
+            new RestError(404, "Not Found", "ID not found in database", { id }),
+        );
+    }
+
+    res.status(200).json({
+        success: true,
+        result,
+    });
+}

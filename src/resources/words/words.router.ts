@@ -27,6 +27,10 @@ router
         middlewares.validateMongoDbId,
         middlewares.validateBody,
         catchAsyncAwaitErrors(wordsController.updateWord),
+    )
+    .delete(
+        middlewares.validateMongoDbId,
+        catchAsyncAwaitErrors(wordsController.deleteWord),
     );
 
 export default router;
