@@ -4,6 +4,7 @@ import wordsRouter from "./resources/words/words.router";
 import usersRouter from "./resources/users/users.router";
 import { connect } from "./utils/db";
 import { dispalyErrors, routeNotFound } from "./middlewares/errorHandlers";
+import { getConfigValue } from "./utils/config";
 
 const app = express();
 
@@ -17,14 +18,7 @@ app.use(routeNotFound);
 app.use(dispalyErrors);
 
 export async function start(): Promise<void> {
-    // TODO: refactor this cause it's starting to look weird
-    if (!process.env.PORT) {
-        throw new Error("Missing PORT environmental variable");
-    } else if (!process.env.MONGODB_URL) {
-        throw new Error("Missing MONGODB_URL environmental variable");
-    }
-
-    const { port, name } = await connect(process.env.MONGODB_URL, {
+    const { port, name } = await connect(getConfigValue("MONGODB_URL"), {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,
@@ -32,7 +26,7 @@ export async function start(): Promise<void> {
     });
     console.log(`Database started: PORT: ${port}, DB_NAME: ${name}`);
 
-    const server = app.listen(process.env.PORT, function serverStarted() {
+    const server = app.listen(getConfigValue("PORT"), function serverStarted() {
         const { port } = server.address() as AddressInfo;
         console.log(`Server started: PORT ${port}`);
     });
