@@ -14,4 +14,6 @@ router.post(
     catchAsyncAwaitErrors(usersController.createUser),
 );
 
+router.post("/login", catchAsyncAwaitErrors(usersController.loginUser));
+
 export default router;

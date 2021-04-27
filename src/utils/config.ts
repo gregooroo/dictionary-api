@@ -1,6 +1,8 @@
 type ConfigValues = {
     readonly PORT: number;
     readonly MONGODB_URL: string;
+    readonly JWT_SECRET_KEY: string;
+    readonly JWT_EXPIRATION_TIME: number;
 };
 
 export function getConfigValue<T extends keyof ConfigValues>(
@@ -13,6 +15,10 @@ export function getConfigValue(
 
     if (!value) {
         throw new Error(`Missing ${name} environmental variable`);
+    }
+
+    if (name === "PORT" || name === "JWT_EXPIRATION_TIME") {
+        return Number(value);
     }
 
     return value;

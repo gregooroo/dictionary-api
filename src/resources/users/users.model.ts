@@ -1,11 +1,19 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, Model } from "mongoose";
 import { duplicateFound } from "../../utils/db";
 import bcrypt from "bcryptjs";
+import { RestError } from "../../utils/errorHandlers";
 
 interface User extends Document {
     username: string;
     email: string;
     password: string;
+}
+
+interface UserModel extends Model<User> {
+    authenticate(
+        username: string,
+        password: string,
+    ): Promise<{ _id: string; username: string; email: string } | RestError>;
 }
 
 const userSchema = new Schema({
@@ -30,6 +38,26 @@ const userSchema = new Schema({
     },
 });
 
+userSchema.statics.authenticate = async function authenticate(
+    this: UserModel,
+    username: string,
+    password: string,
+) {
+    const user = await this.findOne({ username }).lean();
+    if (!user) {
+        return new RestError(401, "Unauthorized", "User not found", {
+            username,
+        });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+        return new RestError(401, "Unauthorized", "Incorrect password");
+    }
+
+    return { _id: user._id, username: user.username, email: user.email };
+};
+
 userSchema.pre("save", async function hashPassword(this: User, next) {
     if (!this.isModified("password")) {
         return next();
@@ -44,4 +72,4 @@ userSchema.pre("save", async function hashPassword(this: User, next) {
 
 userSchema.post("save", duplicateFound);
 
-export default model<User>("User", userSchema);
+export default model<User, UserModel>("User", userSchema);
