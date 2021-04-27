@@ -13,7 +13,7 @@ interface UserModel extends Model<User> {
     authenticate(
         username: string,
         password: string,
-    ): Promise<{ _id: string; username: string; email: string } | RestError>;
+    ): Promise<{ _id: string; username: string } | RestError>;
 }
 
 const userSchema = new Schema({
@@ -55,7 +55,7 @@ userSchema.statics.authenticate = async function authenticate(
         return new RestError(401, "Unauthorized", "Incorrect password");
     }
 
-    return { _id: user._id, username: user.username, email: user.email };
+    return { _id: user._id, username: user.username };
 };
 
 userSchema.pre("save", async function hashPassword(this: User, next) {
