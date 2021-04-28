@@ -2,10 +2,13 @@ import { Router } from "express";
 import * as middlewares from "./words.middleware";
 import * as wordsController from "./words.controller";
 import { catchAsyncAwaitErrors } from "../../utils/errorHandlers";
+import { authorizeUser } from "../../middlewares/auth";
 
 // All routers are loaded in src/server.ts file
 
 const router = Router();
+
+router.all("*", authorizeUser);
 
 // /api/words
 
