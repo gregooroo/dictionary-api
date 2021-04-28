@@ -42,5 +42,12 @@ services:
         # Add "forwardPorts": ["27017"] to **devcontainer.json** to forward MongoDB locally.
         # (Adding the "ports" property to this file will not forward from a Codespace.)
 
+    redis:
+        image: redis:6.2-buster
+        restart: unless-stopped
+        volumes:
+            - redis-data:/data
+
 volumes:
     mongodb-data:
+    redis-data:
