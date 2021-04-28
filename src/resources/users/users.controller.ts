@@ -30,3 +30,14 @@ export async function loginUser(
         result: token,
     });
 }
+
+export async function logoutUser(
+    _req: Request,
+    res: Response,
+    _next: NextFunction,
+): Promise<void> {
+    res.json({
+        success: true,
+        result: "aslkdfjskldfjl",
+    });
+}
