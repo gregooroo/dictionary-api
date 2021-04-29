@@ -1,6 +1,7 @@
 type ConfigValues = {
     readonly PORT: number;
     readonly MONGODB_URL: string;
+    readonly REDIS_URL: string;
     readonly JWT_SECRET_KEY: string;
     readonly JWT_EXPIRATION_TIME: number;
 };
