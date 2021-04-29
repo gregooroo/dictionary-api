@@ -55,7 +55,7 @@ userSchema.statics.authenticate = async function authenticate(
         return new RestError(401, "Unauthorized", "Incorrect password");
     }
 
-    return { _id: user._id, username: user.username };
+    return { _id: String(user._id), username: user.username };
 };
 
 userSchema.pre("save", async function hashPassword(this: User, next) {

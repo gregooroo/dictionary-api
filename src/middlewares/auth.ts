@@ -30,7 +30,8 @@ export function authorizeUser(
             );
         }
 
-        req.user = { _id: user._id, username: user.username };
+        req.user = user;
+        req.token = token;
         next();
     } catch (err) {
         return next(err);

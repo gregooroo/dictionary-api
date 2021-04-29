@@ -2,17 +2,17 @@ import redis, { RedisClient } from "redis";
 
 let connection: RedisClient | undefined;
 
-interface RedisConnection extends RedisClient {
-    selected_db: string;
-    connection_options: { port: number };
-}
-
 function getConnection(client: RedisClient | undefined) {
     if (!client || typeof client === "undefined") {
         throw new Error("Redis database not connected");
     }
 
     return client;
+}
+
+interface RedisConnection extends RedisClient {
+    selected_db: string;
+    connection_options: { port: number };
 }
 
 export function connect(
@@ -30,4 +30,13 @@ export function connect(
             });
         });
     });
+}
+
+export function setWithTTL(
+    key: string,
+    value: string,
+    expiresIn: number,
+): void {
+    const client = getConnection(connection);
+    client.set(key, value, "EX", expiresIn);
 }

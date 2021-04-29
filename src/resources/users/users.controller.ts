@@ -1,7 +1,10 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { getConfigValue } from "../../utils/config";
+import { isUser } from "../../utils/types";
 import Model from "./users.model";
+import { setWithTTL } from "../../utils/redis";
+import { RestError } from "../../utils/errorHandlers";
 
 export async function createUser(req: Request, res: Response): Promise<void> {
     const { username, email } = await Model.create(req.body);
@@ -15,15 +18,14 @@ export async function createUser(req: Request, res: Response): Promise<void> {
 export async function loginUser(
     req: Request,
     res: Response,
-    _next: NextFunction,
+    next: NextFunction,
 ): Promise<void> {
-    const token = jwt.sign(
-        req.user as Record<string, string>,
-        getConfigValue("JWT_SECRET_KEY"),
-        {
-            expiresIn: getConfigValue("JWT_EXPIRATION_TIME"),
-        },
-    );
+    if (!isUser(req.user)) {
+        return next(new TypeError("Malformed req.user"));
+    }
+    const token = jwt.sign(req.user, getConfigValue("JWT_SECRET_KEY"), {
+        expiresIn: getConfigValue("JWT_EXPIRATION_TIME"),
+    });
 
     res.json({
         success: true,
@@ -32,12 +34,26 @@ export async function loginUser(
 }
 
 export async function logoutUser(
-    _req: Request,
+    req: Request,
     res: Response,
-    _next: NextFunction,
+    next: NextFunction,
 ): Promise<void> {
+    if (!isUser(req.user)) {
+        return next(new TypeError("Malformed req.user"));
+    }
+
+    const now = Math.floor(Date.now() / 1000);
+    const expirationTime = req.user.exp;
+    const ttl = Number(expirationTime) - now;
+
+    if (!req.token) {
+        return next(new RestError(500, "Unexpected Error", "Mising Token"));
+    }
+
+    setWithTTL(req.token, "blacklisted", ttl);
+
     res.json({
         success: true,
-        result: "aslkdfjskldfjl",
+        result: "Successfully logged out",
     });
 }
