@@ -4,12 +4,13 @@ import { getAuthHeader } from "../utils/auth";
 import { getConfigValue } from "../utils/config";
 import { RestError } from "../utils/errorHandlers";
 import { isUser } from "../utils/types";
+import { get } from "../utils/redis";
 
-export function authorizeUser(
+export async function authorizeUser(
     req: Request,
     _res: Response,
     next: NextFunction,
-): void {
+): Promise<void> {
     const token = getAuthHeader("Bearer", req);
 
     if (!token) {
@@ -17,6 +18,12 @@ export function authorizeUser(
     }
 
     try {
+        const isBlacklisted = await get(token);
+
+        if (isBlacklisted) {
+            return next(new RestError(403, "Forbidden", "Invalid Token"));
+        }
+
         const user = jwt.verify(token, getConfigValue("JWT_SECRET_KEY"));
 
         if (!isUser(user)) {

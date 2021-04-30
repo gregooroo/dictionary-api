@@ -1,3 +1,4 @@
+import { promisify } from "util";
 import redis, { RedisClient } from "redis";
 
 let connection: RedisClient | undefined;
@@ -39,4 +40,11 @@ export function setWithTTL(
 ): void {
     const client = getConnection(connection);
     client.set(key, value, "EX", expiresIn);
+}
+
+export function get(key: string): Promise<string | null> {
+    const client = getConnection(connection);
+    const asyncGet = promisify(client.get).bind(client);
+
+    return asyncGet(key);
 }

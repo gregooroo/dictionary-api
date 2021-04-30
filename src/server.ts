@@ -25,7 +25,7 @@ export async function start(): Promise<void> {
         useCreateIndex: true,
         useFindAndModify: false,
     });
-    console.log(`Database started: PORT: ${port}, DB_NAME: ${name}`);
+    console.log(`MongoDB connected: PORT: ${port}, DB_NAME: ${name}`);
 
     const { port: redisPort, selectedDb } = await redisConnect(
         getConfigValue("REDIS_URL"),
