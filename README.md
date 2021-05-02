@@ -8,6 +8,7 @@
 - [1. About the project](#1-about-the-project)
 - [2. Prerequisites](#2-prerequisites)
 - [3. Installation](#3-installation)
+- [5. Documentation](#5-documentation)
 - [6. License](#6-license)
 - [7. Author](#7-author)
 - [8. Built with](#8-built-with)
