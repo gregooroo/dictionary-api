@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import {
     param,
+    query,
     expressValidatorResult,
     stringFieldValidator,
     arrayFieldValidator,
@@ -47,5 +48,17 @@ export const validateMongoDbId = [
             return Types.ObjectId.isValid(value);
         })
         .withMessage("Invalid ID"),
+    expressValidatorResult,
+];
+
+export const validatePaginationParams = [
+    query("page")
+        .optional()
+        .isInt({ gt: 0 })
+        .withMessage("Page must be greater than 0"),
+    query("limit")
+        .optional()
+        .isInt({ gt: 0 })
+        .withMessage("Limit must be greater than 0"),
     expressValidatorResult,
 ];

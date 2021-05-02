@@ -18,7 +18,10 @@ router
         middlewares.validateBody,
         catchAsyncAwaitErrors(wordsController.createWord),
     )
-    .get(catchAsyncAwaitErrors(wordsController.getWords));
+    .get(
+        middlewares.validatePaginationParams,
+        catchAsyncAwaitErrors(wordsController.getWords),
+    );
 
 router
     .route("/:id")
