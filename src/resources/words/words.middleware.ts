@@ -5,6 +5,7 @@ import {
     expressValidatorResult,
     stringFieldValidator,
     arrayFieldValidator,
+    Meta,
 } from "../../utils/express-validator";
 
 export const validateBody = [
@@ -51,14 +52,52 @@ export const validateMongoDbId = [
     expressValidatorResult,
 ];
 
+/**
+ *
+ * @param otherField - Fields required for pagination to work
+ * @returns
+ */
+function paginationParamsXORCheck(otherField: "page" | "limit") {
+    /**
+     * Express-validator custom validator
+     *
+     * If a field being validated is "page" then we're checking if "limit" is also provided (and vice versa)
+     * The idea for this is to work like a XOR gate
+     *
+     * @param _value - value of the field being validated
+     * @param meta - object contains express request, location and field path
+     * @returns
+     */
+    function check(_value: unknown, meta: Meta) {
+        const { req } = meta;
+        const requestQueryFields = Object.keys(
+            req.query as Record<string, unknown>,
+        );
+
+        if (!requestQueryFields.includes(otherField)) {
+            return false;
+        }
+        return true;
+    }
+    return check;
+}
+
 export const validatePaginationParams = [
     query("page")
         .optional()
         .isInt({ gt: 0 })
-        .withMessage("Page must be greater than 0"),
+        .withMessage("Page must be greater than 0")
+        .custom(paginationParamsXORCheck("limit"))
+        .withMessage(
+            `Missing "limit" pagination param. To fully support pagination both "page" and "limit" must be provided`,
+        ),
     query("limit")
         .optional()
         .isInt({ gt: 0 })
-        .withMessage("Limit must be greater than 0"),
+        .withMessage("Limit must be greater than 0")
+        .custom(paginationParamsXORCheck("page"))
+        .withMessage(
+            `Missing "page" pagination param. To fully support pagination both "page" and "limit" must be provided`,
+        ),
     expressValidatorResult,
 ];
