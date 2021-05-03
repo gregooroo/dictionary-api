@@ -1,5 +1,7 @@
 import express from "express";
 import { AddressInfo } from "net";
+import helmet from "helmet";
+import morgan from "morgan";
 import wordsRouter from "./resources/words/words.router";
 import usersRouter from "./resources/users/users.router";
 import { connect } from "./utils/db";
@@ -10,6 +12,8 @@ import { connect as redisConnect } from "./utils/redis";
 const app = express();
 
 app.use(express.json());
+app.use(helmet());
+app.use(morgan("dev"));
 
 app.use("/api/words", wordsRouter);
 app.use("/api/users", usersRouter);
