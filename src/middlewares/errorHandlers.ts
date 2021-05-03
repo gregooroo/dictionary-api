@@ -17,7 +17,7 @@ export function routeNotFound(
     );
 }
 
-export function dispalyErrors(
+export function displayErrors(
     err: RestError,
     _req: Request,
     res: Response,

@@ -5,7 +5,7 @@ import morgan from "morgan";
 import wordsRouter from "./resources/words/words.router";
 import usersRouter from "./resources/users/users.router";
 import { connect } from "./utils/db";
-import { dispalyErrors, routeNotFound } from "./middlewares/errorHandlers";
+import { displayErrors, routeNotFound } from "./middlewares/errorHandlers";
 import { getConfigValue } from "./utils/config";
 import { connect as redisConnect } from "./utils/redis";
 
@@ -20,7 +20,7 @@ app.use("/api/users", usersRouter);
 
 app.use(routeNotFound);
 // This middleware must be the last one
-app.use(dispalyErrors);
+app.use(displayErrors);
 
 export async function start(): Promise<void> {
     const { port, name } = await connect(getConfigValue("MONGODB_URL"), {
