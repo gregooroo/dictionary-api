@@ -17,7 +17,8 @@ export async function getWords(req: Request, res: Response): Promise<void> {
 
     const result = await Model.find({})
         .limit(limit * 1)
-        .skip((page - 1) * limit);
+        .skip((page - 1) * limit)
+        .exec();
 
     res.status(200).json({
         success: true,
@@ -32,7 +33,7 @@ export async function getWord(
 ): Promise<void> {
     const { id } = req.params;
 
-    const result = await Model.findById(id).lean();
+    const result = await Model.findById(id).exec();
 
     if (!result) {
         return next(
@@ -56,7 +57,7 @@ export async function updateWord(
     const result = await Model.findByIdAndUpdate(id, req.body, {
         runValidators: true,
         new: true,
-    }).lean();
+    }).exec();
 
     if (!result) {
         return next(
@@ -77,7 +78,7 @@ export async function deleteWord(
 ): Promise<void> {
     const { id } = req.params;
 
-    const result = await Model.findByIdAndDelete(id).lean();
+    const result = await Model.findByIdAndDelete(id).exec();
 
     if (!result) {
         return next(

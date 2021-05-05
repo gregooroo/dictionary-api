@@ -17,55 +17,70 @@ interface Word extends Document {
         | "interjection";
 }
 
-const wordSchema = new Schema({
-    word: {
-        type: String,
-        required: true,
-        lowercase: true,
-        trim: true,
-    },
-
-    definition: {
-        type: String,
-        required: true,
-        lowercase: true,
-        trim: true,
-    },
-
-    translations: [
-        {
+const wordSchema = new Schema(
+    {
+        word: {
             type: String,
             required: true,
             lowercase: true,
             trim: true,
         },
-    ],
 
-    examples: [
-        {
+        definition: {
             type: String,
             required: true,
+            lowercase: true,
             trim: true,
         },
-    ],
 
-    partOfSpeech: {
-        type: String,
-        required: true,
-        lowercase: true,
-        trim: true,
-        enum: [
-            "noun",
-            "pronoun",
-            "verb",
-            "adverb",
-            "adjective",
-            "preposition",
-            "conjunction",
-            "interjection",
+        translations: [
+            {
+                type: String,
+                required: true,
+                lowercase: true,
+                trim: true,
+            },
         ],
+
+        examples: [
+            {
+                type: String,
+                required: true,
+                trim: true,
+            },
+        ],
+
+        partOfSpeech: {
+            type: String,
+            required: true,
+            lowercase: true,
+            trim: true,
+            enum: [
+                "noun",
+                "pronoun",
+                "verb",
+                "adverb",
+                "adjective",
+                "preposition",
+                "conjunction",
+                "interjection",
+            ],
+        },
     },
-});
+    {
+        toJSON: {
+            transform: function deleteVersionKey(
+                _doc: Word,
+                ret: Word,
+                _options: unknown,
+            ) {
+                console.log("test");
+                delete ret.__v;
+                return ret;
+            },
+        },
+    },
+);
 
 wordSchema.index({ word: 1, translations: 1 }, { unique: true });
 
