@@ -197,28 +197,31 @@ GET /api/words
 ```json
 {
     "success": true,
-    "result": [
-        {
-            "_id": "608edf06c0dd844ef1ea7d56",
-            "translations": ["rolnictwo"],
-            "examples": [
-                "Agriculture here is still largely based on traditional methods."
-            ],
-            "word": "agriculture",
-            "definition": "the practice and science of farming",
-            "partOfSpeech": "noun"
-        },
-        {
-            "_id": "608ee43a87a17c69371e893c",
-            "translations": ["sadza"],
-            "examples": [
-                "Soot can leave ugly stains on anything it comes in contact with."
-            ],
-            "word": "soot",
-            "definition": "a black powder produced when wood, coal etc. is burned",
-            "partOfSpeech": "noun"
-        }
-    ]
+    "result": {
+        "totalItems": 2,
+        "items": [
+            {
+                "_id": "608edf06c0dd844ef1ea7d56",
+                "translations": ["rolnictwo"],
+                "examples": [
+                    "Agriculture here is still largely based on traditional methods."
+                ],
+                "word": "agriculture",
+                "definition": "the practice and science of farming",
+                "partOfSpeech": "noun"
+            },
+            {
+                "_id": "608ee43a87a17c69371e893c",
+                "translations": ["sadza"],
+                "examples": [
+                    "Soot can leave ugly stains on anything it comes in contact with."
+                ],
+                "word": "soot",
+                "definition": "a black powder produced when wood, coal etc. is burned",
+                "partOfSpeech": "noun"
+            }
+        ]
+    }
 }
 ```
 
@@ -297,21 +300,17 @@ PATCH /api/words/:id
 
 ```json
 {
-{
-  "success": true,
-  "result": {
-    "_id": "608edf06c0dd844ef1ea7d56",
-    "translations": [
-      "rolnictwo",
-      "uprawa roli"
-    ],
-    "examples": [
-      "Agriculture here is still largely based on traditional methods."
-    ],
-    "word": "agriculture",
-    "definition": "the practice and science of farming",
-    "partOfSpeech": "noun",
-  }
+    "success": true,
+    "result": {
+        "_id": "608edf06c0dd844ef1ea7d56",
+        "translations": ["rolnictwo", "uprawa roli"],
+        "examples": [
+            "Agriculture here is still largely based on traditional methods."
+        ],
+        "word": "agriculture",
+        "definition": "the practice and science of farming",
+        "partOfSpeech": "noun"
+    }
 }
 ```
 

@@ -13,16 +13,50 @@ export async function createWord(req: Request, res: Response): Promise<void> {
 
 export async function getWords(req: Request, res: Response): Promise<void> {
     let { page = 0, limit = 0 } = req.query;
+    // This map below prevents from this:
+    // The left-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.",
     [page, limit] = [page, limit].map(Number);
 
-    const result = await Model.find({})
-        .limit(limit * 1)
-        .skip((page - 1) * limit)
-        .exec();
+    // Second aggregate pipelie
+    let data;
+    // By default we want just to remove versionKey from returned documents
+    const defaults = [{ $unset: "__v" }];
+
+    if (page && limit) {
+        // If page and limit are provided - do pagination
+        data = [
+            ...[{ $skip: (page - 1) * limit }, { $limit: limit * 1 }],
+            ...defaults,
+        ];
+    } else {
+        data = [...defaults];
+    }
+
+    const result = await Model.aggregate([
+        {
+            $facet: {
+                totalItems: [
+                    {
+                        $group: { _id: null, count: { $sum: 1 } },
+                    },
+                ],
+                data,
+            },
+        },
+        {
+            $unwind: "$totalItems",
+        },
+        {
+            $project: {
+                totalItems: "$totalItems.count",
+                items: "$data",
+            },
+        },
+    ]).exec();
 
     res.status(200).json({
         success: true,
-        result,
+        result: result[0],
     });
 }
 
