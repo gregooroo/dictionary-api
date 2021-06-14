@@ -56,7 +56,7 @@ export async function getWords(req: Request, res: Response): Promise<void> {
 
     res.status(200).json({
         success: true,
-        result: result[0],
+        result: result[0] || [],
     });
 }
 
