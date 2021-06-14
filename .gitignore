@@ -83,3 +83,6 @@ typings/
 
 #Personal notes etc.
 notes.txt
+
+#TypeScript build files
+dist/

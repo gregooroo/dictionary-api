@@ -1,4 +1,5 @@
 type ConfigValues = {
+    readonly NODE_ENV: string;
     readonly PORT: number;
     readonly MONGODB_URL: string;
     readonly REDIS_URL: string;

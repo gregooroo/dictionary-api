@@ -15,7 +15,7 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 app.use(helmet());
-app.use(morgan("dev"));
+app.use(morgan(getConfigValue("NODE_ENV") === "production" ? "common" : "dev"));
 
 app.use("/api/words", wordsRouter);
 app.use("/api/users", usersRouter);

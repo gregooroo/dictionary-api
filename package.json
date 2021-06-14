@@ -6,9 +6,11 @@
     "author": "Mateusz Gregorczyk <gregooroo@gmail.com>",
     "license": "AGPL-3.0-only",
     "scripts": {
-        "format": "prettier --write \"src/**/*.{ts,json}\"",
-        "lint": "eslint \"src/**/*.ts\" --quiet",
+        "start": "node dist/index.js",
+        "build": "rimfar dist && yarn tsc",
         "dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
+        "lint": "eslint \"src/**/*.ts\" --quiet",
+        "format": "prettier --write \"src/**/*.{ts,json}\"",
         "prepare": "husky install"
     },
     "devDependencies": {
@@ -41,6 +43,7 @@
         "jsonwebtoken": "^8.5.1",
         "mongoose": "~5.10.19",
         "morgan": "^1.10.0",
-        "redis": "^3.1.2"
+        "redis": "^3.1.2",
+        "rimfar": "^3.0.2-omega"
     }
 }

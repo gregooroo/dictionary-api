@@ -64,7 +64,25 @@ cd ./dictionary-api
 
 #### Production
 
-This project is not production ready yet.
+**NOTE:** This project is not production ready yet.
+
+1. Install project dependencies:
+
+```sh
+yarn install
+```
+
+2. Build:
+
+```sh
+yarn build
+```
+
+3. Start the server:
+
+```sh
+yarn start
+```
 
 ### 5. Documentation
 
