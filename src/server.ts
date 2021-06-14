@@ -2,6 +2,7 @@ import express from "express";
 import { AddressInfo } from "net";
 import helmet from "helmet";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import wordsRouter from "./resources/words/words.router";
 import usersRouter from "./resources/users/users.router";
 import { connect } from "./utils/db";
@@ -11,6 +12,7 @@ import { connect as redisConnect } from "./utils/redis";
 
 const app = express();
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("dev"));

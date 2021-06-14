@@ -27,9 +27,17 @@ export async function loginUser(
         expiresIn: getConfigValue("JWT_EXPIRATION_TIME"),
     });
 
+    res.cookie("accessToken", token, {
+        expires: new Date(
+            Date.now() + getConfigValue("JWT_EXPIRATION_TIME") * 1000,
+        ),
+        httpOnly: true,
+        sameSite: "lax",
+    });
+
     res.json({
         success: true,
-        result: token,
+        result: "Successfully logged in",
     });
 }
 
