@@ -57,6 +57,8 @@ curl --request POST \
 
 ### Login user
 
+**Endpoint**
+
 ```http
 POST /api/users/login
 ```
@@ -72,9 +74,11 @@ POST /api/users/login
 ```json
 {
     "success": true,
-    "result": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDg3MWUwZDI5OWRhZDM5MzJhOWNjNmEiLCJ1c2VybmFtZSI6ImdyZWdvb3JvbyIsImlhdCI6MTYxOTk3MTUxNSwiZXhwIjoxNjIwMDU3OTE1fQ.FV8TbtDmaJp3diujN_mVMPx3qDpDvpUX-R1Rxik1IW4"
+    "result": "Successfully logged in"
 }
 ```
+
+This endpoint will also save a HttpOnly cookie named `accessToken`.
 
 **Example**
 
@@ -86,15 +90,17 @@ curl --request POST \
 
 ### Logout user
 
+**Endpoint**
+
 ```http
 POST /api/users/logout
 ```
 
 **Request's configuration**
 
-|       Location       | Parameter | Required |                             Description                             |
-| :------------------: | :-------: | :------: | :-----------------------------------------------------------------: |
-| Authorization Header |  Bearer   |   true   | valid jwt token generated with [POST /api/users/login](#login-user) |
+| Location |  Parameter  | Required |                                     Description                                      |
+| :------: | :---------: | :------: | :----------------------------------------------------------------------------------: |
+|  Cookie  | accessToken |   true   | A cookie that contains JWT token generated with [POST /api/users/login](#login-user) |
 
 **Successful Response (200)**
 
@@ -104,6 +110,8 @@ POST /api/users/logout
     "result": "Successfully logged out"
 }
 ```
+
+This endpoint will destroy a cookie previously set by [POST /api/users/login](#login-user)
 
 **Example**
 
@@ -125,14 +133,14 @@ POST /api/words
 
 **Request's configuration**
 
-|       Location       |  Parameter   | Required |                             Description                             |
-| :------------------: | :----------: | :------: | :-----------------------------------------------------------------: |
-| Authorization Header |    Bearer    |   true   | valid jwt token generated with [POST /api/users/login](#login-user) |
-|         Body         |     word     |   true   |                     string, **Compound Index**                      |
-|         Body         |  definition  |   true   |                               string                                |
-|         Body         | translations |   true   |                array of strings, **Compound Index**                 |
-|         Body         |   examples   |   true   |                          array of strings                           |
-|         Body         | partOfSpeech |   true   |                               string                                |
+| Location |  Parameter   | Required |                                     Description                                      |
+| :------: | :----------: | :------: | :----------------------------------------------------------------------------------: |
+|  Cookie  | accessToken  |   true   | A cookie that contains JWT token generated with [POST /api/users/login](#login-user) |
+|   Body   |     word     |   true   |                              string, **Compound Index**                              |
+|   Body   |  definition  |   true   |                                        string                                        |
+|   Body   | translations |   true   |                         array of strings, **Compound Index**                         |
+|   Body   |   examples   |   true   |                                   array of strings                                   |
+|   Body   | partOfSpeech |   true   |                                        string                                        |
 
 -   Word and translation (element in array) together form a compound index which mean word and translation must be unique
 
@@ -157,11 +165,10 @@ POST /api/words
 **Example**
 
 ```sh
-curl --request POST \
-  --url http://localhost:3000/api/words \
-  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDg3MWUwZDI5OWRhZDM5MzJhOWNjNmEiLCJ1c2VybmFtZSI6ImdyZWdvb3JvbyIsImlhdCI6MTYxOTk3NTkzOSwiZXhwIjoxNjIwMDYyMzM5fQ.HbaA_Rtq7h4aFPyLEbWNk5DtqSP9yqxL_wft5sxLeyM' \
-  --header 'Content-Type: application/json' \
-  --data '{
+curl --location --request POST 'localhost:3000/api/words' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGM3YWJlNTg1M2IyMjU4MjE3N2I5ZmIiLCJ1c2VybmFtZSI6ImdyZWdvb3JvbyIsImlhdCI6MTYyMzcwNDk4NiwiZXhwIjoxNjIzNzkxMzg2fQ.EEP7WW3Ok-uBAs_5Xjcvi_plhXJ7eDeF2HEzcdqQuQs' \
+--data-raw '{
 	"word": "agriculture",
 	"definition": "the practice and science of farming",
 	"translations": [
@@ -184,11 +191,11 @@ GET /api/words
 
 **Request's configuration**
 
-|       Location       | Parameter | Required |                             Description                             |
-| :------------------: | :-------: | :------: | :-----------------------------------------------------------------: |
-| Authorization Header |  Bearer   |   true   | valid jwt token generated with [POST /api/users/login](#login-user) |
-|        Query         |   page    | false\*  |                       Pagination: page number                       |
-|        Query         |   limit   | false\*  |                Pagination: amount of items per page                 |
+| Location |  Parameter  | Required |                                     Description                                      |
+| :------: | :---------: | :------: | :----------------------------------------------------------------------------------: |
+|  Cookie  | accessToken |   true   | A cookie that contains JWT token generated with [POST /api/users/login](#login-user) |
+|  Query   |    page     | false\*  |                               Pagination: page number                                |
+|  Query   |    limit    | false\*  |                         Pagination: amount of items per page                         |
 
 -   If either page or limit is provided in a request other one must be provided too
 
@@ -228,9 +235,8 @@ GET /api/words
 **Example**
 
 ```sh
-curl --request GET \
-  --url 'http://localhost:3000/api/words?page=1&limit=2' \
-  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDg3MWUwZDI5OWRhZDM5MzJhOWNjNmEiLCJ1c2VybmFtZSI6ImdyZWdvb3JvbyIsImlhdCI6MTYxOTk3NTkzOSwiZXhwIjoxNjIwMDYyMzM5fQ.HbaA_Rtq7h4aFPyLEbWNk5DtqSP9yqxL_wft5sxLeyM'
+curl --location --request GET 'localhost:3000/api/words' \
+--header 'Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGM3YWJlNTg1M2IyMjU4MjE3N2I5ZmIiLCJ1c2VybmFtZSI6ImdyZWdvb3JvbyIsImlhdCI6MTYyMzcwNDk4NiwiZXhwIjoxNjIzNzkxMzg2fQ.EEP7WW3Ok-uBAs_5Xjcvi_plhXJ7eDeF2HEzcdqQuQs'
 ```
 
 ### Get word
@@ -243,10 +249,10 @@ GET /api/words/:id
 
 **Request's configuration**
 
-|       Location       | Parameter | Required |                             Description                             |
-| :------------------: | :-------: | :------: | :-----------------------------------------------------------------: |
-| Authorization Header |  Bearer   |   true   | valid jwt token generated with [POST /api/users/login](#login-user) |
-|         Url          |    :id    |   true   |                          Valid MongoDB id                           |
+| Location |  Parameter  | Required |                                     Description                                      |
+| :------: | :---------: | :------: | :----------------------------------------------------------------------------------: |
+|  Cookie  | accessToken |   true   | A cookie that contains JWT token generated with [POST /api/users/login](#login-user) |
+|   Url    |     :id     |   true   |                                   Valid MongoDB id                                   |
 
 **Successful Response (200)**
 
@@ -269,9 +275,8 @@ GET /api/words/:id
 **Example**
 
 ```sh
-curl --request GET \
-  --url http://localhost:3000/api/words/608edf06c0dd844ef1ea7d56 \
-  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDg3MWUwZDI5OWRhZDM5MzJhOWNjNmEiLCJ1c2VybmFtZSI6ImdyZWdvb3JvbyIsImlhdCI6MTYxOTk3NTkzOSwiZXhwIjoxNjIwMDYyMzM5fQ.HbaA_Rtq7h4aFPyLEbWNk5DtqSP9yqxL_wft5sxLeyM'
+curl --location --request GET 'localhost:3000/api/words/60c7ac2c853b22582177b9fe' \
+--header 'Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGM3YWJlNTg1M2IyMjU4MjE3N2I5ZmIiLCJ1c2VybmFtZSI6ImdyZWdvb3JvbyIsImlhdCI6MTYyMzcwNDk4NiwiZXhwIjoxNjIzNzkxMzg2fQ.EEP7WW3Ok-uBAs_5Xjcvi_plhXJ7eDeF2HEzcdqQuQs'
 ```
 
 ### Update Word
@@ -284,15 +289,15 @@ PATCH /api/words/:id
 
 **Request's configuration**
 
-|       Location       |  Parameter   | Required |                             Description                             |
-| :------------------: | :----------: | :------: | :-----------------------------------------------------------------: |
-| Authorization Header |    Bearer    |   true   | valid jwt token generated with [POST /api/users/login](#login-user) |
-|         Url          |     :id      |   true   |                          Valid MongoDB id                           |
-|         Body         |     word     |   true   |                     string, **Compound Index**                      |
-|         Body         |  definition  |   true   |                               string                                |
-|         Body         | translations |   true   |                array of strings, **Compound Index**                 |
-|         Body         |   examples   |   true   |                          array of strings                           |
-|         Body         | partOfSpeech |   true   |                               string                                |
+| Location |  Parameter   | Required |                                     Description                                      |
+| :------: | :----------: | :------: | :----------------------------------------------------------------------------------: |
+|  Cookie  | accessToken  |   true   | A cookie that contains JWT token generated with [POST /api/users/login](#login-user) |
+|   Url    |     :id      |   true   |                                   Valid MongoDB id                                   |
+|   Body   |     word     |   true   |                              string, **Compound Index**                              |
+|   Body   |  definition  |   true   |                                        string                                        |
+|   Body   | translations |   true   |                         array of strings, **Compound Index**                         |
+|   Body   |   examples   |   true   |                                   array of strings                                   |
+|   Body   | partOfSpeech |   true   |                                        string                                        |
 
 -   Word and translation (element in array) together form a compound index which mean word and translation must be unique
 
@@ -319,21 +324,19 @@ PATCH /api/words/:id
 **Example**
 
 ```sh
-curl --request PATCH \
-  --url http://localhost:3000/api/words/608edf06c0dd844ef1ea7d56 \
-  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDg3MWUwZDI5OWRhZDM5MzJhOWNjNmEiLCJ1c2VybmFtZSI6ImdyZWdvb3JvbyIsImlhdCI6MTYyMDA2MjAyOCwiZXhwIjoxNjIwMTQ4NDI4fQ.7ujrJk6oVqniotNqMz8uQFzbW2fVetYIrBWJrQjvs_4' \
-  --header 'Content-Type: application/json' \
-  --data '{
-	"word": "agriculture",
-	"definition": "the practice and science of farming",
-	"translations": [
-		"rolnictwo",
-		"uprawa roli"
-	],
-	"examples": [
-		"Agriculture here is still largely based on traditional methods."
-	],
-	"partOfSpeech": "noun"
+curl --location --request PATCH 'localhost:3000/api/words/60c7ac2c853b22582177b9fe' \
+--header 'Content-Type: application/json' \
+--header 'Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGM3YWJlNTg1M2IyMjU4MjE3N2I5ZmIiLCJ1c2VybmFtZSI6ImdyZWdvb3JvbyIsImlhdCI6MTYyMzcwNDk4NiwiZXhwIjoxNjIzNzkxMzg2fQ.EEP7WW3Ok-uBAs_5Xjcvi_plhXJ7eDeF2HEzcdqQuQs' \
+--data-raw '{
+    "translations": [
+        "rolnictwo"
+    ],
+    "examples": [
+        "Agriculture here is still largely based on traditional methods."
+    ],
+    "word": "agriculture",
+    "definition": "the practice and science of farming",
+    "partOfSpeech": "noun"
 }'
 ```
 
@@ -347,10 +350,10 @@ DELETE /api/words/:id
 
 **Request's configuration**
 
-|       Location       | Parameter | Required |                             Description                             |
-| :------------------: | :-------: | :------: | :-----------------------------------------------------------------: |
-| Authorization Header |  Bearer   |   true   | valid jwt token generated with [POST /api/users/login](#login-user) |
-|         Url          |    :id    |   true   |                          Valid MongoDB id                           |
+| Location |  Parameter  | Required |                                     Description                                      |
+| :------: | :---------: | :------: | :----------------------------------------------------------------------------------: |
+|  Cookie  | accessToken |   true   | A cookie that contains JWT token generated with [POST /api/users/login](#login-user) |
+|   Url    |     :id     |   true   |                                   Valid MongoDB id                                   |
 
 **Successful Response (200)**
 
@@ -375,7 +378,6 @@ DELETE /api/words/:id
 **Example**
 
 ```sh
-curl --request DELETE \
-  --url http://localhost:3000/api/words/608edf06c0dd844ef1ea7d56 \
-  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDg3MWUwZDI5OWRhZDM5MzJhOWNjNmEiLCJ1c2VybmFtZSI6ImdyZWdvb3JvbyIsImlhdCI6MTYyMDA2MjAyOCwiZXhwIjoxNjIwMTQ4NDI4fQ.7ujrJk6oVqniotNqMz8uQFzbW2fVetYIrBWJrQjvs_4'
+curl --location --request DELETE 'localhost:3000/api/words/60c7c6d3ea55cb91efba86ae' \
+--header 'Cookie: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGM3YWJlNTg1M2IyMjU4MjE3N2I5ZmIiLCJ1c2VybmFtZSI6ImdyZWdvb3JvbyIsImlhdCI6MTYyMzcwNDk4NiwiZXhwIjoxNjIzNzkxMzg2fQ.EEP7WW3Ok-uBAs_5Xjcvi_plhXJ7eDeF2HEzcdqQuQs'
 ```
