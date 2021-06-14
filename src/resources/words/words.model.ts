@@ -74,7 +74,6 @@ const wordSchema = new Schema(
                 ret: Word,
                 _options: unknown,
             ) {
-                console.log("test");
                 delete ret.__v;
                 return ret;
             },

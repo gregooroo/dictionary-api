@@ -1,6 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { getAuthHeader } from "../utils/auth";
 import { getConfigValue } from "../utils/config";
 import { RestError } from "../utils/errorHandlers";
 import { isUser } from "../utils/types";
@@ -11,7 +10,7 @@ export async function authorizeUser(
     _res: Response,
     next: NextFunction,
 ): Promise<void> {
-    const token = getAuthHeader("Bearer", req);
+    const { accessToken: token } = req.cookies;
 
     if (!token) {
         return next(new RestError(403, "Forbidden", "Missing Token"));

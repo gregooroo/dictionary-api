@@ -60,6 +60,10 @@ export async function logoutUser(
 
     setWithTTL(req.token, "blacklisted", ttl);
 
+    res.cookie("accessToken", req.token, {
+        expires: new Date(Date.now() - 3600000),
+    });
+
     res.json({
         success: true,
         result: "Successfully logged out",
