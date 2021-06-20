@@ -7,15 +7,17 @@ jobs:
     deploy:
         runs-on: ubuntu-latest
         steps:
-            - name: Build the application and start the server
+            - name: ssh key passphrase
               uses: appleboy/ssh-action@master
               with:
                   host: ${{ secrets.VPS_HOST }}
-                  port: ${{ secrets.VPS_PORT }}
+                  username: ${{ secrets.VPS_USERNAME }}
                   key: ${{ secrets.SSH_KEY }}
-                  passphrase: ${{ secret.SSH_PASSPHRASE }}
-                  scripts: |
+                  port: ${{ secrets.VPS_PORT }}
+                  passphrase: ${{ secrets.SSH_PASSPHRASE }}
+                  script: |
                       cd /var/www/dictionary-api
                       git pull origin master
+                      yarn install
                       yarn build
                       pm2 restart index
