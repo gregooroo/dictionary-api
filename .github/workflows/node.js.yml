@@ -7,7 +7,7 @@ jobs:
     deploy:
         runs-on: ubuntu-latest
         steps:
-            - name: ssh key passphrase
+            - name: Install Build and Run
               uses: appleboy/ssh-action@master
               with:
                   host: ${{ secrets.VPS_HOST }}
