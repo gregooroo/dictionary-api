@@ -1,0 +1,20 @@
+name: "VPS Deploy"
+on:
+    push:
+        branches:
+            - master
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Build the application and start the server
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.VPS_HOST }}
+                  port: ${{ secrets.VPS_PORT }}
+                  key: ${{ secrets.SSH_KEY }}
+                  scripts: |
+                      cd /var/www/dictionary-api
+                      git pull origin master
+                      yarn build
+                      pm2 restart index
