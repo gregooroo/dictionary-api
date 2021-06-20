@@ -13,6 +13,7 @@ jobs:
                   host: ${{ secrets.VPS_HOST }}
                   port: ${{ secrets.VPS_PORT }}
                   key: ${{ secrets.SSH_KEY }}
+                  passphrase: ${{ secret.SSH_PASSPHRASE }}
                   scripts: |
                       cd /var/www/dictionary-api
                       git pull origin master
