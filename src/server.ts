@@ -20,6 +20,19 @@ app.use(morgan(getConfigValue("NODE_ENV") === "production" ? "common" : "dev"));
 app.use("/api/words", wordsRouter);
 app.use("/api/users", usersRouter);
 
+app.use("/", (_req, res) => {
+    res.json({
+        success: true,
+        message:
+            "Hi :) To learn more about this API please checkout project's github repo",
+        details: {
+            repository: "https://github.com/gregooroo/dictionary-api",
+            documentation:
+                "https://github.com/gregooroo/dictionary-api/blob/master/DOCUMENTATION.md",
+        },
+    });
+});
+
 app.use(routeNotFound);
 // This middleware must be the last one
 app.use(displayErrors);
