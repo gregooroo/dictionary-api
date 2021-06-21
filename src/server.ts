@@ -20,7 +20,7 @@ app.use(morgan(getConfigValue("NODE_ENV") === "production" ? "common" : "dev"));
 app.use("/api/words", wordsRouter);
 app.use("/api/users", usersRouter);
 
-app.use("/", (_req, res) => {
+app.get("/", (_req, res) => {
     res.json({
         success: true,
         message:
