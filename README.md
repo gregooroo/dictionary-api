@@ -12,6 +12,7 @@
 - [6. License](#6-license)
 - [7. Author](#7-author)
 - [8. Built with](#8-built-with)
+- [9. Live Version](#9-live-version)
 
 </details>
 
@@ -102,3 +103,24 @@ This project is distributed under the AGPL-3.0 License. See [LICENSE](./LICENSE)
 -   [Mongoose](https://mongoosejs.com/) - MongoDB ODM for Node.js
 -   [Express](https://expressjs.com/) - Web framework for Node.js
 -   [Node Redis](https://github.com/NodeRedis/node-redis) - A high performance Node.js Redis client.
+
+### 9. Live version
+
+https://dictionary.gregooroo.work
+
+I decided not to use platforms like Heroku to deploy this API. Instead to challenge myself I bought a VPS and configure it manually. Here is some quick lookup of how this looks like:
+
+-   [VPS (DigitalOcean's Droplet)](https://www.digitalocean.com/)
+    -   Nginx (Reverse Proxy)
+    -   MongoDB
+    -   Redis
+
+I know that both databases and the app itself on one machine is not a perfect solution but for this demo it's ok.
+
+-   [Lets Encrypt](https://letsencrypt.org/)
+
+It's important to have this "green padlock" visible in your browser so I used [Certbot](https://certbot.eff.org/lets-encrypt/ubuntufocal-nginx) to generate SSL certificates.
+
+-   Github Actions
+
+For the deployment process itself I chose Github actions. The workflow works like this: Every time I push something to the master branch a "Install Build and Run" job is being triggered which essentially reinstalls dependencies, rebuild the app and restart pm2 process mananger.
