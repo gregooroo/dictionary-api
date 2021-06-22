@@ -13,6 +13,7 @@
 - [7. Author](#7-author)
 - [8. Built with](#8-built-with)
 - [9. Live Version](#9-live-version)
+- [10. TODO List](#10-todo)
 
 </details>
 
@@ -64,8 +65,6 @@ cd ./dictionary-api
     ```
 
 #### Production
-
-**NOTE:** This project is not production ready yet.
 
 1. Install project dependencies:
 
@@ -123,4 +122,16 @@ It's important to have this "green padlock" visible in your browser so I used [C
 
 -   Github Actions
 
-For the deployment process itself I chose Github actions. The workflow works like this: Every time I push something to the master branch a "Install Build and Run" job is being triggered which essentially reinstalls dependencies, rebuild the app and restart pm2 process mananger.
+For the deployment process itself I chose Github actions. The workflow works like this: Every time I push something to the master branch a "Install Build and Run" job is being triggered which essentially reinstalls dependencies, rebuild the app and restart pm2 process manager.
+
+### 10. TODO
+
+-   [ ] Tests - WIP inside "tests" branch
+-   [ ] Connect word with a user
+    -   [ ] Add info about the user to every word
+-   [ ] Permissions system
+    -   [ ] User can only delete own words
+    -   [ ] Admin can delete all words
+-   [ ] Edit profile
+    -   [ ] Password change mechanism
+    -   [ ] Email change mechanism
